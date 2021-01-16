@@ -1,8 +1,10 @@
 import express from "express";
+import cors from 'cors';
 const app = express();
 const port = 5000;
 
 app.use(express.json());
+app.use(cors());
 app.post("/", (req, res) => {
   let time_taken, displacement, speed;
   
@@ -19,6 +21,7 @@ app.post("/", (req, res) => {
   displacement = speed * time_taken;
   displacement = Math.sqrt((displacement * displacement) -( width * width));
   console.log(displacement);
+  console.log(time_taken);
   res.status(200).json({ time_taken, displacement });
 });
 

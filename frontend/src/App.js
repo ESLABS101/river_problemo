@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import FormContainer from "./components/FormContainer";
+import Header from "./components/Header";
+import axios from "axios";
+import Result from "./components/Result";
+import Graph from "./components/Graph";
 
 function App() {
+  const [result, setResult] = useState(null);
+  const [width, setWidth] = useState(null);
+
+  const submitHandler = async (params) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.post("http://localhost:5000/", params, config);
+    setResult(data);
+    setWidth(params.width);
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <div className="container">
+        <div className="row">
+          <div className="col-6">
+            <FormContainer submitHandler={submitHandler} />
+          </div>
+          <div className="col-5">
+            <img
+              src="river.svg"
+              style={{ maxWidth: "600px" }}
+              alt="river svg"
+            />
+          </div>
+        </div>
+      </div>
+      {result && <Result result={result} />}
+      {result && <Graph width={width} result={result} />}
     </div>
   );
 }
